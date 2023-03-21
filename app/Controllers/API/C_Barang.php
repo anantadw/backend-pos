@@ -33,13 +33,35 @@ class C_Barang extends ResourceController
         ]);
     }
 
-    public function updateStock($kode)
-    {
+    public function kurangiStock($kode){
+        $databarang = $this->model->find($kode);
         $data = [
-            'stok' => $this->request->getRawInputVar('stok')
+            'stok' => $this->request->getRawInputVar('stok'),
         ];
 
-        $this->model->update($kode, $data);
+        if($databarang['stok'] < $data['stok']) {
+            return $this->respond([
+                'message' => 'Gagal Ditambahkan.'
+            ]);
+        }
+
+        $databarang['stok'] = $databarang['stok'] - $data['stok']; 
+
+        $this->model->update($kode, $databarang);
+
+        return $this->respondUpdated([
+            'message' => 'Stok barang berhasil diperbarui.'
+        ]);
+    }
+
+    public function tambahStock($kode)
+    {
+        $databarang = $this->model->find($kode);
+        $data = [
+            'stok' => $this->request->getRawInputVar('stok'),
+        ];
+        $databarang['stok'] = $databarang['stok'] + $data['stok']; 
+        $this->model->update($kode, $databarang);
 
         return $this->respondUpdated([
             'message' => 'Stok barang berhasil diperbarui.'

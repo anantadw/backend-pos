@@ -30,10 +30,14 @@ $routes->set404Override();
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 // $routes->get('/', 'Home::index');
-$routes->get('api/barang', 'API\\C_Barang::index');
-$routes->post('api/barang', 'API\\C_Barang::addBarang');
-$routes->patch('api/barang/(:alphanum)', 'API\\C_Barang::updateStock/$1');
-$routes->delete('api/barang/(:alphanum)', 'API\\C_Barang::deleteBarang/$1');
+$routes->group('api', function ($routes) {
+    $routes->get('barang', 'API\\C_Barang::index');
+    $routes->post('barang', 'API\\C_Barang::addBarang');
+    $routes->patch('barang/kurang/(:alphanum)', 'API\\C_Barang::kurangiStock/$1');
+    $routes->patch('barang/tambah/(:alphanum)', 'API\\C_Barang::tambahStock/$1');
+    $routes->delete('barang/(:alphanum)', 'API\\C_Barang::deleteBarang/$1');
+});
+
 
 /*
  * --------------------------------------------------------------------
